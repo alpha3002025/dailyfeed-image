@@ -10,7 +10,7 @@ description = "😊😊😊"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+	implementation(project(":dailyfeed-code"))
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("net.coobird:thumbnailator:0.4.20")
 	compileOnly("org.projectlombok:lombok")
