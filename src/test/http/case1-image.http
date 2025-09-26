@@ -1,5 +1,5 @@
 ### Upload Image Test
-POST http://localhost:8080/api/images/upload
+POST http://localhost:8085/api/images/upload
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -9,8 +9,10 @@ Content-Type: image/png
 < ./images/image4.png
 --WebAppBoundary--
 
+> {% client.global.set("imageId", response.body.data); %}
+
 ### View Original Image
-GET http://localhost:8080/api/images/view/{{imageId}}
+GET http://localhost:8085/api/images/view/{{imageId}}
 
 ### View Thumbnail Image
-GET http://localhost:8080/api/images/view/{{imageId}}?thumbnail=true
+GET http://localhost:8085/api/images/view/{{imageId}}?thumbnail=true

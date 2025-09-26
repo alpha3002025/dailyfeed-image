@@ -1,11 +1,14 @@
 package click.dailyfeed.image.domain.image.api;
 
+import click.dailyfeed.code.domain.image.exception.ImageProcessingFailException;
+import click.dailyfeed.code.domain.image.exception.ImageReadingFailException;
+import click.dailyfeed.code.global.web.code.ResponseSuccessCode;
+import click.dailyfeed.code.global.web.response.DailyfeedServerResponse;
 import click.dailyfeed.image.domain.image.service.ProfileImageStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +23,38 @@ public class ImageController {
     private final ProfileImageStorageService imageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) {
-
+    public DailyfeedServerResponse<String> uploadImage(@RequestParam("image") MultipartFile file) {
         try {
             String imageId = imageService.store(file);
-            return ResponseEntity.ok(imageId);
+            return DailyfeedServerResponse.<String>builder()
+                    .result(ResponseSuccessCode.SUCCESS)
+                    .status(HttpStatus.OK.value())
+                    .data(imageId)
+                    .build();
         } catch (IOException e) {
-            return ResponseEntity.status(500).body("Failed to upload image: "+ e.getMessage());
+            throw new ImageProcessingFailException();
         }
-
     }
 
     @GetMapping("/view/{imageId}")
     public ResponseEntity<Resource> getImage(@PathVariable("imageId") String imageId,
                                              @RequestParam(value = "thumbnail", defaultValue = "false") Boolean isThumbnail) {
         Resource image = imageService.get(imageId, isThumbnail);
-        return (image != null) ? ResponseEntity.ok().contentType(MediaType.parseMediaType("image/jpeg")).body(image) : ResponseEntity.notFound().build();
+        if (image != null) {
+            String contentType = "image/jpeg";
+            if (imageId.toLowerCase().endsWith(".png")) {
+                contentType = "image/png";
+            } else if (imageId.toLowerCase().endsWith(".gif")) {
+                contentType = "image/gif";
+            } else if (imageId.toLowerCase().endsWith(".webp")) {
+                contentType = "image/webp";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + imageId + "\"")
+                    .body(image);
+        }
+        throw new ImageReadingFailException();
     }
 }

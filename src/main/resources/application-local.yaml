@@ -4,3 +4,5 @@ images:
   max-height: 350
   thumbnail-size: 150
   quality: 0.85
+server:
+  port: 8085
