@@ -36,6 +36,22 @@ public class ImageController {
         }
     }
 
+    @PostMapping("/upload/profile")
+    public DailyfeedServerResponse<String> uploadProfileImage(
+            @RequestParam("image") MultipartFile file
+    ) {
+        try {
+            String imageId = imageService.store(file);
+            return DailyfeedServerResponse.<String>builder()
+                    .result(ResponseSuccessCode.SUCCESS)
+                    .status(HttpStatus.OK.value())
+                    .data(imageId)
+                    .build();
+        } catch (IOException e) {
+            throw new ImageProcessingFailException();
+        }
+    }
+
     @GetMapping("/view/{imageId}")
     public ResponseEntity<Resource> getImage(@PathVariable("imageId") String imageId,
                                              @RequestParam(value = "thumbnail", defaultValue = "false") Boolean isThumbnail) {

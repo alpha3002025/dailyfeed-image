@@ -16,3 +16,27 @@ GET http://localhost:8085/api/images/view/{{imageId}}
 
 ### View Thumbnail Image
 GET http://localhost:8085/api/images/view/{{imageId}}?thumbnail=true
+
+
+### Upload Profile Image Test
+POST http://localhost:8085/api/images/upload/profile
+Authorization: Bearer 1111
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="image4.png"
+Content-Type: image/png
+
+< ./images/image4.png
+--WebAppBoundary--
+
+> {% client.global.set("profileImageId", response.body.data); %}
+
+
+### View Original Profile Image
+GET http://localhost:8085/api/images/view/{{profileImageId}}
+Authorization: Bearer 1111
+
+### View Thumbnail Profile Image
+GET http://localhost:8085/api/images/view/{{profileImageId}}?thumbnail=true
+Authorization: Bearer 1111
