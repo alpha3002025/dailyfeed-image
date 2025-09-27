@@ -75,7 +75,7 @@ public class ImageController {
         throw new ImageReadingFailException();
     }
 
-    @DeleteMapping("/view/command/in")
+    @PostMapping("/view/command/delete/in")
     public DailyfeedServerResponse<Boolean> deleteImage(
             @RequestBody MemberProfileDto.ImageDeleteBulkRequest imageDeleteBulkRequest
     ) {

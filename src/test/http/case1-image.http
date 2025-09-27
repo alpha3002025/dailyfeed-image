@@ -43,7 +43,7 @@ Authorization: Bearer 1111
 
 
 ### Delete Thumbnail Profile Image
-DELETE http://localhost:8085/api/images/view/command/in
+POST http://localhost:8085/api/images/view/command/delete/in
 Authorization: Bearer 1111
 Content-Type: application/json
 
