@@ -40,3 +40,16 @@ Authorization: Bearer 1111
 ### View Thumbnail Profile Image
 GET http://localhost:8085/api/images/view/{{profileImageId}}?thumbnail=true
 Authorization: Bearer 1111
+
+
+### Delete Thumbnail Profile Image
+DELETE http://localhost:8085/api/images/view/command/in
+Authorization: Bearer 1111
+Content-Type: application/json
+
+{
+  "imageUrls": [
+    "http://localhost:8085/api/images/12345",
+    "http://localhost:8085/api/images/12345-thumbnail"
+  ]
+}

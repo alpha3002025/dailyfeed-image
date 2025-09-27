@@ -2,6 +2,7 @@ package click.dailyfeed.image.domain.image.api;
 
 import click.dailyfeed.code.domain.image.exception.ImageProcessingFailException;
 import click.dailyfeed.code.domain.image.exception.ImageReadingFailException;
+import click.dailyfeed.code.domain.member.member.dto.MemberProfileDto;
 import click.dailyfeed.code.global.web.code.ResponseSuccessCode;
 import click.dailyfeed.code.global.web.response.DailyfeedServerResponse;
 import click.dailyfeed.image.domain.image.service.ProfileImageStorageService;
@@ -72,5 +73,17 @@ public class ImageController {
                     .body(image);
         }
         throw new ImageReadingFailException();
+    }
+
+    @DeleteMapping("/view/command/in")
+    public DailyfeedServerResponse<Boolean> deleteImage(
+            @RequestBody MemberProfileDto.ImageDeleteBulkRequest imageDeleteBulkRequest
+    ) {
+        imageService.deleteImages(imageDeleteBulkRequest);
+        return DailyfeedServerResponse.<Boolean>builder()
+                .result(ResponseSuccessCode.SUCCESS)
+                .status(HttpStatus.OK.value())
+                .data(Boolean.TRUE)
+                .build();
     }
 }
