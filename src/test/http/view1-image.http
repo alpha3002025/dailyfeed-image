@@ -1,0 +1,8 @@
+@profileImageId = c2b5b9d8-f74d-4f7f-a2f9-77c66f9cbfa8
+
+
+### View Original Profile Image
+GET http://localhost:8085/api/images/view/{{profileImageId}}
+
+### View Thumbnail Profile Image
+GET http://localhost:8085/api/images/view/{{profileImageId}}?thumbnail=true
