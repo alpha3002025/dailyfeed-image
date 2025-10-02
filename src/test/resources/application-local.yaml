@@ -1,0 +1,8 @@
+images:
+  upload-root: ./tmp/dailyfeed/store/images
+  max-width: 350
+  max-height: 350
+  thumbnail-size: 150
+  quality: 0.85
+server:
+  port: 8085
