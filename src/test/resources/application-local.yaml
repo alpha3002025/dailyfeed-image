@@ -5,4 +5,4 @@ images:
   thumbnail-size: 150
   quality: 0.85
 server:
-  port: 8085
+  port: ${SERVER_PORT:8085}
