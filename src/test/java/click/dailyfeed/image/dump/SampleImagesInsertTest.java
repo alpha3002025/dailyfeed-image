@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("local")
+@ActiveProfiles("local-was-test")
 @SpringBootTest
 @AutoConfigureMockMvc
 public class SampleImagesInsertTest {
@@ -72,7 +72,5 @@ public class SampleImagesInsertTest {
                     .forEach(path -> System.out.println(path.getFileName().toString().replace(".PNG", "")));
         }
     }
-
-
 
 }

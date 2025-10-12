@@ -16,7 +16,7 @@ public class ImageControllerAdvice {
             ImageException e,
             HttpServletRequest request) {
 
-        log.warn("Comment exception occurred: {}, path: {}",
+        log.warn("Image exception occurred: {}, path: {}",
                 e.getImageExceptionCode().getMessage(),
                 request.getRequestURI());
 
