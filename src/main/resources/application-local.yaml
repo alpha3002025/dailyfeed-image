@@ -1,3 +1,7 @@
+spring:
+  config:
+    import:
+      - classpath:feign-config-local.yaml
 images:
   upload-root: /image
   max-width: 350

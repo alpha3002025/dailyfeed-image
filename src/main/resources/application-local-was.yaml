@@ -1,3 +1,7 @@
+spring:
+  config:
+    import:
+      - classpath:feign-config-local-was.yaml
 images:
   upload-root: ./tmp/dailyfeed/store/images
   max-width: 350
