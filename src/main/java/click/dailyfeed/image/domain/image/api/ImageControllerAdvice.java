@@ -1,16 +1,90 @@
 package click.dailyfeed.image.domain.image.api;
 
+import click.dailyfeed.code.domain.content.comment.exception.CommentException;
 import click.dailyfeed.code.domain.image.exception.ImageException;
+import click.dailyfeed.code.domain.member.key.exception.JwtKeyException;
+import click.dailyfeed.code.domain.member.member.code.MemberHeaderCode;
+import click.dailyfeed.code.domain.member.token.exception.KeyRefreshErrorException;
+import click.dailyfeed.code.domain.member.token.exception.TokenRefreshNeededException;
+import click.dailyfeed.code.global.jwt.exception.InvalidTokenException;
 import click.dailyfeed.code.global.web.code.ResponseSuccessCode;
 import click.dailyfeed.code.global.web.response.DailyfeedErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice(basePackages = "click.dailyfeed.image.domain.image.api")
 public class ImageControllerAdvice {
+    @ExceptionHandler(CommentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DailyfeedErrorResponse handleCommentException(
+            CommentException e,
+            HttpServletRequest request) {
+
+        log.warn("Comment exception occurred: {}, path: {}",
+                e.getCommentExceptionCode().getReason(),
+                request.getRequestURI());
+
+        return DailyfeedErrorResponse.of(
+                e.getCommentExceptionCode().getCode(),
+                ResponseSuccessCode.FAIL,
+                e.getCommentExceptionCode().getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(KeyRefreshErrorException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public DailyfeedErrorResponse handleKeyRefreshErrorException(KeyRefreshErrorException e, HttpServletRequest request, HttpServletResponse response) {
+        return DailyfeedErrorResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ResponseSuccessCode.FAIL,
+                e.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(JwtKeyException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public DailyfeedErrorResponse handleJwtKeyException(JwtKeyException e, HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader(MemberHeaderCode.X_RELOGIN_REQUIRED.getHeaderKey(), "true");
+        return DailyfeedErrorResponse.of(
+                HttpStatus.UNAUTHORIZED.value(),
+                ResponseSuccessCode.FAIL,
+                e.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public DailyfeedErrorResponse handleInvalidTokenException(InvalidTokenException e, HttpServletRequest request, HttpServletResponse response) {
+        log.error("Invalid token error: {}", e.getMessage());
+        response.setHeader(MemberHeaderCode.X_RELOGIN_REQUIRED.getHeaderKey(), "true");
+        return DailyfeedErrorResponse.of(
+                HttpStatus.UNAUTHORIZED.value(),
+                ResponseSuccessCode.FAIL,
+                e.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(TokenRefreshNeededException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public DailyfeedErrorResponse handleTokenRefreshNeededException(TokenRefreshNeededException e, HttpServletRequest request) {
+        return DailyfeedErrorResponse.of(
+                HttpStatus.UNAUTHORIZED.value(),
+                ResponseSuccessCode.FAIL,
+                e.getTokenExceptionCode().getMessage(),
+                request.getRequestURI()
+        );
+    }
+
     @ExceptionHandler(ImageException.class)
     public DailyfeedErrorResponse handleImageException(
             ImageException e,
