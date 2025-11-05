@@ -26,10 +26,22 @@ repositories {
 
 dependencies {
 	implementation(project(":dailyfeed-code"))
+
+	// spring
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+	// micrometer & prometheus
+	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+
+	// thumbnailator
 	implementation("net.coobird:thumbnailator:0.4.20")
+
+	// lombok
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+
+	// test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
